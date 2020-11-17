@@ -56,26 +56,28 @@ func(t *Transaction)HashCsv()string{
 }
 
 func(t *Transaction)GetAll(filters map[string][]string)map[string]interface{}{
+	
 	sqlStatement := `SELECT id, movement_type, amount, time, status FROM public.transactions WHERE user_id=$1`
-	date_from, okFrom := filters["date_from"]
-	if okFrom || len(date_from) == 1{
+	
+	if date_from, okFrom := filters["date_from"]; okFrom || len(date_from) == 1{
 		date_from := DateToTime(date_from[0])
 		sqlStatement = sqlStatement + ` AND time > ` + strconv.FormatInt(date_from, 10)
 	}
-	date_to, okTo := filters["date_to"]
-	if okTo || len(date_to) == 1{
+	
+	if date_to, okTo := filters["date_to"]; okTo || len(date_to) == 1{
 		date_to := DateToTime(date_to[0])
 		sqlStatement = sqlStatement + ` AND time < ` + strconv.FormatInt(date_to, 10)
 	}
+
 	sqlStatement = sqlStatement + ` ORDER BY id `
-	_, okAsc := filters["asc"]
-	if okAsc{
+
+	if _, okAsc := filters["asc"]; okAsc{
 		sqlStatement = sqlStatement + ` ASC `
 	}else{
 		sqlStatement = sqlStatement + ` DESC `
 	}
-	size, okSize := filters["size"]
-	if okSize || len(size) == 1{
+
+	if size, okSize := filters["size"]; okSize || len(size) == 1{
 		sqlStatement = sqlStatement + ` LIMIT ` + size[0]
 	}
 	result, err := DB.Query(sqlStatement, t.UserId)
@@ -108,25 +110,25 @@ func(t *Transaction)GetAll(filters map[string][]string)map[string]interface{}{
 
 func(t *Transaction)GetAllCsv(filters map[string][]string)map[string]interface{}{
 	sqlStatement := `SELECT id, movement_type, amount, time, status FROM public.transactions WHERE user_id=$1`
-	date_from, okFrom := filters["date_from"]
-	if okFrom || len(date_from) == 1{
+	
+	if date_from, okFrom := filters["date_from"]; okFrom || len(date_from) == 1{
 		date_from := DateToTime(date_from[0])
 		sqlStatement = sqlStatement + ` AND time > ` + strconv.FormatInt(date_from, 10)
 	}
-	date_to, okTo := filters["date_to"]
-	if okTo || len(date_to) == 1{
+	
+	if date_to, okTo := filters["date_to"]; okTo || len(date_to) == 1{
 		date_to := DateToTime(date_to[0])
 		sqlStatement = sqlStatement + ` AND time < ` + strconv.FormatInt(date_to, 10)
 	}
+	
 	sqlStatement = sqlStatement + ` ORDER BY id `
-	_, okAsc := filters["asc"]
-	if okAsc{
+	if _, okAsc := filters["asc"]; okAsc{
 		sqlStatement = sqlStatement + ` ASC `
 	}else{
 		sqlStatement = sqlStatement + ` DESC `
 	}
-	size, okSize := filters["size"]
-	if okSize || len(size) == 1{
+	
+	if size, okSize := filters["size"]; okSize || len(size) == 1{
 		sqlStatement = sqlStatement + ` LIMIT ` + size[0]
 	}
 	result, err := DB.Query(sqlStatement, t.UserId)

@@ -17,6 +17,5 @@ func main(){
 	models.Init() // Инициализируем соединение с бд
 	defer models.DB.Close() // Запускаем закрытие соединения с бд, как отложенное событие
 	r := router.NewRouter() // Подключаем роутер
-	http.Handle("/", r)
 	http.ListenAndServe(":8080", c.Handler(r)) // Запускаем сервер 
 }
