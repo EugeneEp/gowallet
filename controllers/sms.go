@@ -8,7 +8,7 @@ import(
 )
 
 
-// Отпарвить смс
+// Отправить смс
 func SendSms(w http.ResponseWriter, r *http.Request) {
 
 	var sms models.Sms
