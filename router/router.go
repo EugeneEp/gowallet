@@ -1,17 +1,18 @@
 package router
 
 import (
-	"github.com/gorilla/mux"
-	"app/middleware"
 	"app/controllers"
+	"app/middleware"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 // Функция инициализирующая роутер
 
-func NewRouter() *mux.Router{
+func NewRouter() *mux.Router {
 	r := mux.NewRouter()
-	r.Use(middleware.JwtAuthentication) // Подключаем прокладку для проверки токена
+	r.Use(middleware.JwtAuthentication)                                                                  // Подключаем прокладку для проверки токена
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/")))) // Указываем статическую папку
 	r.HandleFunc("/auth/login", controllers.LoginHandle).Methods("POST")
 	r.HandleFunc("/auth/registration", controllers.RegistrationHandle).Methods("POST")

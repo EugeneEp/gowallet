@@ -14,6 +14,7 @@ import(
 	"io"
 	"os"
 	"strconv"
+	"fmt"
 )
 
 type User struct{
@@ -32,15 +33,23 @@ type User struct{
 }
 
 func(u *User)UserExistByPhone() (int, error){
-	var id int
-	err := DB.QueryRow(`SELECT id FROM public.users WHERE phone=$1`, u.Phone).Scan(&id)
-	if err == sql.ErrNoRows{
-		return 0, err
+	var errRDB error
+	id, errRDB := RDB.Get(u.Phone).Result()
+	if errRDB != nil{
+		fmt.Println("no redis")
+		errDB := DB.QueryRow(`SELECT id FROM public.users WHERE phone=$1`, u.Phone).Scan(&id)
+		if errDB == sql.ErrNoRows{
+			return 0, errDB
+		}
+		if errDB != nil {
+	        return 0, errDB
+	    }
+	    _ = RDB.Set(u.Phone, id, 0).Err()
+	}else{
+		fmt.Println("redis")
 	}
-	if err != nil {
-        return 0, err
-    }
-    return id, nil
+	result, _ := strconv.Atoi(id)
+    return result, nil
 }
 
 func(u *User)CreateToken()(string, error){
