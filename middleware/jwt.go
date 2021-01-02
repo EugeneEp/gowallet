@@ -8,6 +8,7 @@ import (
 	"context"
 	"app/models"
 	"time"
+	"os"
 )
 
 type Token struct {
@@ -50,13 +51,11 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 			return
 		}
 
-		secret := "Jawe21321dawdawd="
-
 		tokenPart := splitted[1]
 		tk := &Token{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
-			return []byte(secret), nil
+			return []byte(os.Getenv("SECRET_TOKEN")), nil
 		})
 
 		if err != nil {

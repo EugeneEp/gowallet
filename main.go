@@ -4,9 +4,17 @@ import (
 	"app/models"
 	"app/router"
 	"net/http"
-
 	"github.com/rs/cors"
+	"github.com/joho/godotenv"
+	"log"
 )
+
+// Загружаем конфигурационный файл
+func init() {
+    if err := godotenv.Load(); err != nil {
+        log.Print("No .env file found")
+    }
+}
 
 func main() {
 

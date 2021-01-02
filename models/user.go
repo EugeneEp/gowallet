@@ -54,7 +54,7 @@ func(u *User)UserExistByPhone() (int, error){
 
 func(u *User)CreateToken()(string, error){
 	var err error
-	secret := "Jawe21321dawdawd="
+	secret := os.Getenv("SECRET_TOKEN")
 
 	atClaims := jwt.MapClaims{}
 	atClaims["phone"] = u.Phone
@@ -68,10 +68,10 @@ func(u *User)CreateToken()(string, error){
 }
 
 func(u *User)Init() {
-	hash := md5.Sum([]byte(u.Password + "69hdaw@e21e2"))
+	hash := md5.Sum([]byte(u.Password + os.Getenv("SALT")))
 	u.Password = hex.EncodeToString(hash[:])
 	if u.Confirm != ""{
-		hashConfirm := md5.Sum([]byte(u.Confirm + "69hdaw@e21e2"))
+		hashConfirm := md5.Sum([]byte(u.Confirm + os.Getenv("SALT")))
 		u.Confirm = hex.EncodeToString(hashConfirm[:])
 	}
 	var replace = re.MustCompile("[^0-9]")
